@@ -28,5 +28,5 @@ const Counter = (props) => {
   </li>
 }
 
-
+// need set withProps true, so that can combile props
 export default Container.createFunctional(Counter, getStores, getState, { withProps: true })
