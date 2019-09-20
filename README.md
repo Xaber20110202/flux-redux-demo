@@ -16,7 +16,7 @@
 
 ## 普通写法
 
-详见：[0.normal](./0.normal/)
+详见：[0.normal](./src/0.normal/)
 
 ```js
 // counter
@@ -79,7 +79,7 @@ export default class ControlPanel extends React.Component {
 
 ## MVC 写法
 
-详见：[1.mvc](./1.mvc/)
+详见：[1.mvc](./src/1.mvc/)
 
 ```js
 // model
@@ -222,7 +222,7 @@ export default class ControlPanel extends React.Component {
 
 ## Flux 写法
 
-详见：[2.flux](./1.flux/)
+详见：[2.flux](./src/1.flux/)
 
 ```js
 // NumsActionTypes
