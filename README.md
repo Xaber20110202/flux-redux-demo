@@ -198,8 +198,8 @@ export default class ControlPanel extends React.Component {
 相对的带来了其他的问题：
 
 1. pubsub、MVC 需要自己实现。而且每个人写法不一致，很容易出现上面类似的 `pubsub.emit('all')` 这样瞎写的东西，难以维护（因此团队还需要 有一个专门的 pubsub、MVC 实现，以及规范的定义）
-2. 更关键的：为了配合视图更新，controlpanel 和 counter 都要在业务层进行手动监听更新、以及 state 需要单独设置（即：既是在 model 中，也要在组件内 state 做设置），在 flux 之前，倒是有人使用 Backbone 做trigger 数据更新，在 componentDidMount 进行事件监听的方式来做，和上面概念差不多一致
-3. 如果需要更多的数据，就会变成这样奇葩难以维护的形式
+2. 更关键的：为了配合视图更新，controlpanel 和 counter 都要在业务层进行手动监听更新、以及 state 需要单独设置（即：既是在 model 中，也要在组件内 state 做设置），在 flux 之前，倒是有人使用 Backbone 做trigger 数据更新，在 componentDidMount 进行事件监听的方式来做，和上面概念差不多
+3. 如果需要更多的数据，就会变成这样奇葩的形式
 
     ```js
     controller.listen(a, () => {
@@ -342,8 +342,8 @@ export default Container.createFunctional(Total, getStores, getState)
 其实也就覆盖了 上方 MVC 模式下 第 1、2 点问题，顺带解决了第 3 点问题
 
 > 1. pubsub、MVC 需要自己实现。而且每个人写法不一致，很容易出现上面类似的 `pubsub.emit('all')` 这样瞎写的东西，难以维护（因此团队还需要 有一个专门的 pubsub、MVC 实现，以及规范的定义）
-> 2. 更关键的：为了配合视图更新，controlpanel 和 counter 都要在业务层进行手动监听更新、以及 state 需要单独设置（即：既是在 model 中，也要在组件内 state 做设置），在 flux 之前，倒是有人使用 Backbone 做trigger 数据更新，在 componentDidMount 进行事件监听的方式来做，和上面概念差不多一致
-> 3. 如果需要更多的数据，就会变成这样奇葩难以维护的形式
+> 2. 更关键的：为了配合视图更新，controlpanel 和 counter 都要在业务层进行手动监听更新、以及 state 需要单独设置（即：既是在 model 中，也要在组件内 state 做设置），在 flux 之前，倒是有人使用 Backbone 做trigger 数据更新，在 componentDidMount 进行事件监听的方式来做，和上面概念差不多
+> 3. 如果需要更多的数据，就会变成这样奇葩的形式
 
 1. 因为 `Action -> Dispatcher -> Store` 定义，开发人员不再需要去实现 pubsub、MVC，此部分 Flux 已经定义并实现了，只要遵从规范写法即可
 2. Flux 给原有的组件，做了一层包裹，将需要的 Store 的数据，监听、注入到组件内。组件也不再需要手动监听
@@ -358,16 +358,16 @@ export default Container.createFunctional(Total, getStores, getState)
 
 Flux 的处理，可以说，已经 90% 完美了
 
-当然，他还存在一些小的缺陷：
+当然，它还存在一些小的缺陷：
 
 1. 热更新： 点两下 Flux 写法的 + 号，store 数据更新了，但是当稍微改动一下 `NumsStore.js` 文件，hot reload 导致数据重新变更回了 `[0, 0, 0]`
 2. store 数据修改，难以做撤销
 3. 不好做插件系统
 4. balabala...
 
-具体还可以参阅 [看漫画，学 Redux](https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn)
+具体可以参阅 [看漫画，学 Redux](https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn)
 
-然后，俺们就来到了 Redux 门前
+于是，俺们就又来到了 Redux 门前
 
 ## Redux 写法
 不好意思，今天关门，TODO 了。
