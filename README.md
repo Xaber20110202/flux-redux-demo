@@ -5,7 +5,7 @@
 ## 大纲
 用 React 实现一个三行计数器的四种写法
 
-![example.jpg](example.jpg)
+![example.png](example.png)
 
 * 普通 写法
 * MVC 写法
