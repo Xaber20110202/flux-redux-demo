@@ -1,5 +1,6 @@
 import * as React from 'react'
-import {Container} from 'flux/utils';
+import { Container, Mixin } from 'flux/utils';
+import * as createClass from 'create-react-class'
 
 import NumsActions from './data/NumsActions';
 import NumsStore from './data/NumsStore';
@@ -50,4 +51,26 @@ Counter2.prototype = Object.create(React.Component.prototype)
 Counter2.getStores = getStores
 Counter2.calculateState = getState
 
-export default Container.create(Counter2, { withProps: true })
+// export default Container.create(Counter2, { withProps: true })
+
+
+// using Mixin
+var Counter3 = createClass({
+  mixins: [
+    Mixin([NumsStore], { withProps: true })
+  ],
+  statics: {
+    calculateState: getState,
+  },
+  render() {
+    // 注意 这里是 state
+    const { decreaseCount, increaseCount, nums, caption } = this.state
+    return <li>
+      <button onClick={() => decreaseCount(caption)}>-</button>
+      <button onClick={() => increaseCount(caption)}>+</button>
+      {caption} Count: {nums[caption]}
+    </li>
+  }
+});
+
+export default Counter3
