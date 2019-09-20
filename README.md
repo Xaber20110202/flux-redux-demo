@@ -75,7 +75,7 @@ export default class ControlPanel extends React.Component {
 2. 基于问题一，只能层层嵌套，把这部分数据，一层层放到更上层 / 更更上层 / 更更更上层 ... 管理，然后一层层 **props down events up**
 3. 问题二的场景，应该属于最大的问题，单身又一个人玩嘛，累就累点，关键以后维护就会比较难了，特别是更多的组件依赖这个 `nums` 数据的时候
 
-然后想到了用 MVC / pubsub 来做
+然后想到了用 MVC / pubsub 来做，把数据放到单独的地方维护，每次数据更新通过 pubsub 形式，监听到数据变化，再 set 到组件内，进行 View 层渲染
 
 ## MVC 写法
 
