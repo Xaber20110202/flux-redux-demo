@@ -6,7 +6,6 @@ import NumsActions from './data/NumsActions';
 import NumsStore from './data/NumsStore';
 
 function getStores(...args) {
-  console.log('args', ...args)
   return [
     NumsStore,
   ];
