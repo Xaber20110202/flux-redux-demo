@@ -1,6 +1,5 @@
-# flux-redux-demo
+# flux redux 前世今生
 
-注：此文根据某篇网上文章 / github 代码仓库精简（找不到原文了）。
 
 ## 大纲
 用 React 实现一个三行计数器的四种写法
