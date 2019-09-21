@@ -1,5 +1,9 @@
 # flux redux 前世今生
 
+附：
+
+* [flux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
+* [redux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
 
 ## 大纲
 用 React 实现一个三行计数器的四种写法
@@ -353,20 +357,24 @@ export default Container.createFunctional(Total, getStores, getState)
 1. 定义了一种格式 / 规范，帮你实现了数据更新的方式，不需要手动实现 pubsub
 2. 帮你实现了数据变化，响应到 View 的操作，不需要再进行 手动处理监听，再将数据重新set 到 View State 的处理
 
-如果对于 Flux 如何实现此两步骤感兴趣，可以移步至 [Flux 源码分析 —— 2019.09.19](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
-
 Flux 的处理，可以说，已经 90% 完美了
 
-当然，它还存在一些小的缺陷：
+如果对于 Flux 如何实现此两步骤感兴趣，可以移步至 [Flux 源码分析 —— 2019.09.19](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
 
-1. 热更新： 点两下 Flux 写法的 + 号，store 数据更新了，但是当稍微改动一下 `NumsStore.js` 文件，hot reload 导致数据重新变更回了 `[0, 0, 0]`
-2. store 数据修改，难以做撤销
-3. 不好做插件系统
-4. balabala...
+**但是**
 
-具体可以参阅 [看漫画，学 Redux](https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn)
+> * 因为 `FluxStoreGroup` 限定了所有传入的 `store` 的 `dispatcher` 必须为同一个，这也就意味着，如果要把不同的 `store` 整合进一个 `component`，那就必须使用相同的 `dispatcher` 去初始化这些 `store`，其实也就意味着，基本上你只需要一个 `new Dispatcher` 出来
+> * `Container` 的包裹是以继承原 类型 的形式来做的，最终数据被集成在 `this.state` 内，而函数式组件，数据集成则需要通过 `props` 获取，详细可见：[counter.js - 2.flux](https://github.com/Xaber20110202/flux-redux-demo/blob/master/src/2.flux/counter.js)
+> * 数据变更的 `log` 记录，需要手动 `xxStore.addListener` 的方式，或者注释掉 Flux 源码内的这行有趣的代码 [FluxContainerSubscriptions console.log](https://github.com/Xaber20110202/FedSource/blob/master/2019.09.19%20flux/7.FluxContainerSubscriptions.js#L79)
+> * 因为 `getInitialState` 数据定义 和 `reduce` 数据更新方式，限定必须在 Store 的继承类上实现，因此只要一改动 `reduce` 代码，hotreload 进行之后，相应的原来网页上已经触发变化的 数据 状态，又会回到 `initialState`
+> * 以及两外两个缺陷（引用摘自 [《看漫画，学 Redux》 —— A cartoon intro to Redux](https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn)）
+>     * 每次触发 action 时状态对象都被直接改写了 （撤回功能）
+>     * 不易于扩展，没有合适的位置实现第三方插件（插件体系）
 
 于是，俺们就又来到了 Redux 门前
 
 ## Redux 写法
 不好意思，今天关门，TODO 了。
+
+## 其他
+此文 部分参考 [揭秘 React 状态管理](https://github.com/happylindz/react-state-management-tutorial)，并做了相关精简。
