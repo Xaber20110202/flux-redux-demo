@@ -2,8 +2,8 @@
 
 附：
 
-* [flux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
-* [redux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
+* [Flux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
+* [Redux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
 
 ## 大纲
 用 React 实现一个三行计数器的四种写法
@@ -363,18 +363,139 @@ Flux 的处理，可以说，已经 90% 完美了
 
 **但是**
 
-> * 因为 `FluxStoreGroup` 限定了所有传入的 `store` 的 `dispatcher` 必须为同一个，这也就意味着，如果要把不同的 `store` 整合进一个 `component`，那就必须使用相同的 `dispatcher` 去初始化这些 `store`，其实也就意味着，基本上你只需要一个 `new Dispatcher` 出来
-> * `Container` 的包裹是以继承原 类型 的形式来做的，最终数据被集成在 `this.state` 内，而函数式组件，数据集成则需要通过 `props` 获取，详细可见：[counter.js - 2.flux](https://github.com/Xaber20110202/flux-redux-demo/blob/master/src/2.flux/counter.js)
-> * 数据变更的 `log` 记录，需要手动 `xxStore.addListener` 的方式，或者注释掉 Flux 源码内的这行有趣的代码 [FluxContainerSubscriptions console.log](https://github.com/Xaber20110202/FedSource/blob/master/2019.09.19%20flux/7.FluxContainerSubscriptions.js#L79)
-> * 因为 `getInitialState` 数据定义 和 `reduce` 数据更新方式，限定必须在 Store 的继承类上实现，因此只要一改动 `reduce` 代码，hotreload 进行之后，相应的原来网页上已经触发变化的 数据 状态，又会回到 `initialState`
-> * 以及两外两个缺陷（引用摘自 [《看漫画，学 Redux》 —— A cartoon intro to Redux](https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn)）
->     * 每次触发 action 时状态对象都被直接改写了 （撤回功能）
->     * 不易于扩展，没有合适的位置实现第三方插件（插件体系）
+> 1. 因为 `FluxStoreGroup` 限定了所有传入的 `store` 的 `dispatcher` 必须为同一个，这也就意味着，如果要把不同的 `store` 整合进一个 `component`，那就必须使用相同的 `dispatcher` 去初始化这些 `store`，其实也就意味着，基本上你只需要一个 `new Dispatcher` 出来
+> 2. 多数据 store，可能存在数据间的依赖，尽管 flux 设计了 `waitFor`，也非常巧妙，但在使用者纬度上看起来，还是比较取巧（更希望的是，一次性把数据变更完）
+> 3. `Container` 的包裹是以继承原 类型 的形式来做的，最终数据被集成在 `this.state` 内，而函数式组件，数据集成则需要通过 `props` 获取，详细可见：[counter.js - 2.flux](https://github.com/Xaber20110202/flux-redux-demo/blob/master/src/2.flux/counter.js)
+> 4. 数据变更的 `log` 记录，需要手动 `xxStore.addListener` 的方式，或者注释掉 Flux 源码内的这行有趣的代码 [FluxContainerSubscriptions console.log](https://github.com/Xaber20110202/FedSource/blob/master/2019.09.19%20flux/7.FluxContainerSubscriptions.js#L79)
+> 5. 因为 `getInitialState` 数据定义 和 `reduce` 数据更新方式，限定必须在 Store 的继承类上实现，因此只要一改动 `reduce` 代码，hotreload 进行之后，相应的原来网页上已经触发变化的 数据 状态，又会回到 `initialState`
+> 6. 以及两外两个缺陷（引用摘自 [《看漫画，学 Redux》 —— A cartoon intro to Redux](https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn)）
+>     1. 插件体系：不易于扩展，没有合适的位置实现第三方插件
+>     2. 时间旅行（撤回 / 重做）功能：~~每次触发 action 时状态对象都被直接改写了~~，个人理解，因为 flux 定义多个 store，而且没有插件系统，难以实现 时间旅行 功能
 
 于是，俺们就又来到了 Redux 门前
 
 ## Redux 写法
-不好意思，今天关门，TODO 了。
+
+```js
+// actionTypes.js
+export const INCREMENT = 'INCREMENT'
+export const DECREMENT = 'DECREMENT'
+
+// action.js
+import * as actionTypes from './actionTypes'
+export const increment = (index) => {
+  return {
+    type: actionTypes.INCREMENT,
+    index,
+  }
+}
+export const decrement = (index) => {
+  return {
+    type: actionTypes.DECREMENT,
+    index,
+  }
+}
+
+// reducer.js
+import * as ActionTypes from './actionTypes'
+export default (state, action) => {
+  const newState = [...state]
+  switch (action.type) {
+    case ActionTypes.INCREMENT: {
+      newState[action.index] += 1
+      return newState
+    }
+    case ActionTypes.DECREMENT:
+      newState[action.index] -= 1
+      return newState
+    default:
+      return state
+  }
+}
+
+// store.js
+import { createStore } from 'redux'
+import reducer from './reducer'
+const initValues = [0, 0, 0]
+export default createStore(reducer, initValues)
+
+// count.js
+import * as React from 'react'
+import { connect } from 'react-redux'
+import * as ActionTypes from './data/actionTypes'
+class Counter extends React.Component {
+  render() {
+    const { decreaseCount, increaseCount, num, caption } = this.props
+    return <li>
+      <button onClick={() => decreaseCount(caption, num)}>-</button>
+      <button onClick={() => increaseCount(caption)}>+</button>
+      {caption} Count: {num}
+    </li>
+  }
+}
+const mapStateToProps = (state, props) => {
+  return {
+    num: state[props.caption],
+  }
+}
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    decreaseCount(caption, num) {
+      if (num > 0) {
+        dispatch({
+          type: ActionTypes.DECREMENT,
+          index: caption,
+        })
+      }
+    },
+    increaseCount(caption) {
+      dispatch({
+        type: ActionTypes.INCREMENT,
+          index: caption,
+      })
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Counter)
+
+// total.js
+import * as React from 'react'
+import { connect } from 'react-redux'
+
+const Total = (props) => {
+  return <div>俺是 Counter 组件爷爷组件的兄弟组件，总计数：{props.total}</div>
+}
+const mapStateToProps = (state/* nums */, props) => {
+  return {
+    total: state.reduce((memo, n) => memo + n, 0)
+  }
+}
+export default connect(mapStateToProps)(Total)
+
+// controlpanel.js
+export default class ControlPanelWrap extends React.Component {
+  render() {
+    return <Provider store={store}>
+      <ControlPanel />
+    </Provider>
+  }
+}
+```
+
+初看情况下，感觉上就是代码编写方式有一些差异。但实际其内部实现已经有了比较大的变化。
+
+如果对于 Redux 如何实现感兴趣，可以移步至 [Redux 源码分析 —— 2019.09.21](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
+
+以及上述 flux 缺陷是如何处理的，也就一目了然
+
+1. 只有一个 dispatch 方法，在 store 上
+2. 单一数据源： 一个 store
+3. `Container` 的功能，单独放在 `react-redux` 上，将 `redux` 部分作为精确 / 精简 / 细分的模块，只负责数据更新、插件系统部分
+4. 通过 `applyMiddleWare`、`enhancer` 和 `componse`，实现完整 / 完善 / 优美的 插件 / 增强 系统，当然也包括 `logger`、`thunk` 等等
+5. 将 `reduce` 部分 和 `store` 部分分开，单独提供了一个 `replaceReducer`，用于实现 hotReload 但是将原来 `store.getState()` 已经变更的数据又重新初始化
+6. 另外两个解决
+    1. 插件系统，上方已提到
+    2. 时间旅行（撤回 / 重做）的工具 [redux-devtools](https://github.com/reduxjs/redux-devtools)
 
 ## 其他
 此文 部分参考 [揭秘 React 状态管理](https://github.com/happylindz/react-state-management-tutorial)，并做了相关精简。
