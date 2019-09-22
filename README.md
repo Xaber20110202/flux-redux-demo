@@ -1,21 +1,21 @@
 # flux redux 前世今生
 
-附：
-
-* [Flux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
-* [Redux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
-
 ## 大纲
-用 React 实现一个三行计数器的四种写法
-
-![example.png](example.png)
+此文通过 React 实现一个三行计数器的四种写法
 
 * 普通 写法
 * MVC 写法
 * Flux 写法
 * Redux 写法
 
-过程中分析各自对应的问题，以此梳理 MVC、Flux、Redux 脉络，便于理解。
+过程中分析各自对应的问题，以此梳理 MVC、Flux、Redux 脉络，附带
+
+* [Flux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
+* [Redux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
+
+以此增强理解
+
+![example.png](example.png)
 
 ## 普通写法
 
