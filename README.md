@@ -1,4 +1,4 @@
-# flux redux 前世今生
+# flux redux 演变、优缺点与源码分析
 
 ## 大纲
 此文通过 React 实现一个三行计数器的四种写法
@@ -15,11 +15,11 @@
 
 以此增强理解
 
-![example.png](example.png)
+![example.png](https://github.com/Xaber20110202/flux-redux-demo/raw/master/example.png)
 
 ## 普通写法
 
-详见：[0.normal](./src/0.normal/)
+详见：[0.normal](https://github.com/Xaber20110202/flux-redux-demo/tree/master/src/0.normal/)
 
 ```js
 // counter
@@ -82,7 +82,7 @@ export default class ControlPanel extends React.Component {
 
 ## MVC 写法
 
-详见：[1.mvc](./src/1.mvc/)
+详见：[1.mvc](https://github.com/Xaber20110202/flux-redux-demo/tree/master/src/1.mvc/)
 
 ```js
 // model
@@ -225,7 +225,7 @@ export default class ControlPanel extends React.Component {
 
 ## Flux 写法
 
-详见：[2.flux](./src/1.flux/)
+详见：[2.flux](https://github.com/Xaber20110202/flux-redux-demo/tree/master/src/2.flux/)
 
 ```js
 // NumsActionTypes
@@ -359,7 +359,7 @@ export default Container.createFunctional(Total, getStores, getState)
 
 Flux 的处理，可以说，已经 90% 完美了
 
-如果对于 Flux 如何实现此两步骤感兴趣，可以移步至 [Flux 源码分析 —— 2019.09.19](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
+如果对于 Flux 如何实现此两步骤感兴趣，可以移步至 [Flux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.19%20flux)
 
 **但是**
 
@@ -375,6 +375,8 @@ Flux 的处理，可以说，已经 90% 完美了
 于是，俺们就又来到了 Redux 门前
 
 ## Redux 写法
+
+详见：[3.redux](https://github.com/Xaber20110202/flux-redux-demo/tree/master/src/3.redux/)
 
 ```js
 // actionTypes.js
@@ -484,7 +486,7 @@ export default class ControlPanelWrap extends React.Component {
 
 初看情况下，感觉上就是代码编写方式有一些差异。但实际其内部实现已经有了比较大的变化。
 
-如果对于 Redux 如何实现感兴趣，可以移步至 [Redux 源码分析 —— 2019.09.21](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
+如果对于 Redux 如何实现感兴趣，可以移步至 [Redux 源码分析](https://github.com/Xaber20110202/FedSource/tree/master/2019.09.21%20redux)
 
 以及上述 flux 缺陷是如何处理的，也就一目了然
 
